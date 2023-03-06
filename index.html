@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      #map {
+        width: 100%;
+        height: 80vh;
+        background: rgb(109, 35, 35);
+      }
+    </style>
+  </head>
+  <body>
+    <h1>hello.......</h1>
+    <input type="text" />
+    <select name="" id="id">
+      <option value="hasan">hasan</option>
+      <option value="faysal">faysal</option>
+      <option value="rakib">rakib</option>
+    </select>
+    <button>send</button>
+    <p></p>
+
+
+    <!-- <div id="map"></div> -->
+
+    <script>
+     
+
+      initMap();
+      function initMap() {
+        
+
+        let map = new google.maps.Map(document.getElementById("map"), {
+          center: { lat: 24.2513, lng: 89.9167 },
+          zoom: 15,
+        });
+
+        var marker = new google.maps.Marker({
+          position: new google.Maps.LatLng(24.2513, 89.967),
+          map: map,
+          icon : 'https://cdn-icons-png.flaticon.com/512/235/235861.png'
+        });
+      }
+    </script>
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD3v6d_Vt4erNUuMA2lhzeKliA71QHhU1E&callback=initMap"
+      defer
+    ></script>
+
+    <script>
+
+      const send = document.querySelector("button");
+      const text = document.querySelector("p");
+      const msg = document.querySelector("input");
+      const id = document.querySelector("#id");
+
+    var audio = new Audio("./notification.mp3")
+    function playAudio() {
+        audio.play()
+    }
+
+      let ws = new WebSocket("ws://localhost:4000");
+
+      ws.addEventListener("open", () => {
+        console.log("web socket connected!");
+      });
+
+      send.onclick = () => {
+        console.log({ [id.value]: msg.value });
+       
+        let temp = JSON.stringify({ [id.value]: msg.value });
+
+        ws.send(temp);
+      };
+      ws.addEventListener("message", (me) => {
+        playAudio()
+        text.innerText += `\n ${me.data}`;
+        msg.value = ''
+
+      });
+    </script>
+
+    <script>
+      
+    </script>
+
+
+  </body>
+</html>
